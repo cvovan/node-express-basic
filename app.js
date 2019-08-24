@@ -12,7 +12,9 @@ app.use(bodyParser.urlencoded({extended: false})); // add middleware to apply in
 const allUserPlans = [
     {id:1, name:'plan 1'},
     {id:2, name:'plan 2'},
-    {id:3, name:'plan 3'}
+    {id:3, name:'plan 3'},
+    {id:4, name:'plan 4'},
+    {id:5, name:'plan 5'}
 ];
 
 // default route to localhost:{PORT}
