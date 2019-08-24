@@ -20,25 +20,20 @@ const allUserPlans = [
 
 // default route to localhost:{PORT}
 app.get('/', (req, res) => {
-    console.log(req.header);
     res.send('Hi world!');
 });
 
 // route to localhost:{PORT}/api/plan
 app.get('/api/plans', (req, res) => {
-    console.log(req.header);
     res.json(allUserPlans);
 });
 
 // route to localhost:{PORT}/api/plan/1
 app.get('/api/plans/:id', (req, res) => {
-    console.log(req.header);
-
-    // getting the parameter passed in the path
+    // get the plan id parameter passed in the path
     // Btw, to get the param passed as query, use req.query.your-param-name
-
     const planId = req.params.id; 
-    console.log('plan id=' + planId)
+    //console.log('plan id=' + planId)
 
     // find and get the plan based on the given id (int)
     const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
@@ -50,14 +45,8 @@ app.get('/api/plans/:id', (req, res) => {
 
 // route to localhost:{PORT}/api/plan
 app.post('/api/plans',  (req, res) => {
-    //console.log(req.header);
 
-    // simple validation of the input
-    //if (!req.body.name) {
-    //    res.status(400).send('Name is required');
-    //    return;
-    //}
-
+    // validate the request
     const result = validatePlan(req.body);
     if ( result.error) {
         res.status(400).send(result.error.details[0].message);
@@ -65,48 +54,61 @@ app.post('/api/plans',  (req, res) => {
     }
 
     // create a new object based on input
-    
     const newPlan = {
         id : allUserPlans.length + 1,
         name: req.body.name // get the name in the body of the post
     };
     
-    console.log('new plan is ' + newPlan);
     allUserPlans.push(newPlan);
+    //console.log('new plan is ' + newPlan);
 
-    // convention is to return the new item created
+    // return the new item created
     res.json(newPlan);
     
 });
 
-// route to localhost:{PORT}/api/plan/1
 app.put('/api/plans/:id', (req, res) => {
-    console.log(req.header);
 
-    // getting the parameter passed in the path
+    // get the plan id parameter passed in the path
     // Btw, to get the param passed as query, use req.query.your-param-name
-
     const planId = req.params.id; 
-    console.log('plan id=' + planId)
 
     // find and get the plan based on the given id (int)
     const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
     if (!foundPlan) res.status(404).send(`No plan ${planId}`);
     
-    // validate
+    // validate the input date
     const result = validatePlan(req.body);
     if ( result.error) {
         res.status(400).send(result.error.details[0].message);
         returnl;
     }
 
-    //update
+    //update the plan
     foundPlan.name = req.body.name;
 
     res.json(foundPlan);
 
 });
 
+app.delete('/api/plans/:id', (req, res) => {
+   // get the plan id parameter passed in the path
+    // Btw, to get the param passed as query, use req.query.your-param-name
+    const planId = req.params.id; 
+
+    // find and get the plan based on the given id (int)
+    const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
+    if (!foundPlan) res.status(404).send(`No plan ${planId}`);
+
+    //delete the plan
+    const index = allUserPlans.indexOf(foundPlan);
+    allUserPlans.splice(index,1);
+
+    res.json(foundPlan);
+
+});
+
+// common function to valiate the request body
 function validatePlan(plan) {
     // validation using joi
     const schema = {
