@@ -58,11 +58,7 @@ app.post('/api/plans',  (req, res) => {
     //    return;
     //}
 
-    // validation using joi
-    const schema = {
-        name: Joi.string().min(3).required()
-    };
-    const result = Joi.validate(req.body, schema);
+    const result = validatePlan(req.body);
     if ( result.error) {
         res.status(400).send(result.error.details[0].message);
         returnl;
@@ -82,5 +78,13 @@ app.post('/api/plans',  (req, res) => {
     res.json(newPlan);
     
 });
+
+function validatePlan(plan) {
+    // validation using joi
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+    return Joi.validate(plan, schema);
+}
 
 app.listen(PORT, () => console.log(`App is listening on port ${PORT}!`));
