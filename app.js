@@ -79,6 +79,34 @@ app.post('/api/plans',  (req, res) => {
     
 });
 
+// route to localhost:{PORT}/api/plan/1
+app.put('/api/plans/:id', (req, res) => {
+    console.log(req.header);
+
+    // getting the parameter passed in the path
+    // Btw, to get the param passed as query, use req.query.your-param-name
+
+    const planId = req.params.id; 
+    console.log('plan id=' + planId)
+
+    // find and get the plan based on the given id (int)
+    const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
+    if (!foundPlan) res.status(404).send(`No plan ${planId}`);
+    
+    // validate
+    const result = validatePlan(req.body);
+    if ( result.error) {
+        res.status(400).send(result.error.details[0].message);
+        returnl;
+    }
+
+    //update
+    foundPlan.name = req.body.name;
+
+    res.json(foundPlan);
+
+});
+
 function validatePlan(plan) {
     // validation using joi
     const schema = {
