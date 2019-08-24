@@ -1,5 +1,6 @@
 const express = require('express'); // always required
 const bodyParser = require('body-parser');
+const Joi = require('@hapi/joi');
 
 const app = express(); // standard to have an app object for express
 const PORT = process.env.PORT || 3000;  // use the PORT env var or default to whatever
@@ -52,12 +53,20 @@ app.post('/api/plans',  (req, res) => {
     //console.log(req.header);
 
     // simple validation of the input
-    if (!req.body.name) {
-        res.status(400).send('Name is required');
-        return;
-    }
+    //if (!req.body.name) {
+    //    res.status(400).send('Name is required');
+    //    return;
+    //}
 
     // validation using joi
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+    const result = Joi.validate(req.body, schema);
+    if ( result.error) {
+        res.status(400).send(result.error.details[0].message);
+        returnl;
+    }
 
     // create a new object based on input
     
