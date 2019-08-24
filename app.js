@@ -37,7 +37,7 @@ app.get('/api/plans/:id', (req, res) => {
 
     // find and get the plan based on the given id (int)
     const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
-    if (!foundPlan) res.status(404).send(`No plan ${planId}`);
+    if (!foundPlan) return res.status(404).send(`No plan ${planId}`);
     
     res.json(foundPlan);
 
@@ -48,10 +48,7 @@ app.post('/api/plans',  (req, res) => {
 
     // validate the request
     const result = validatePlan(req.body);
-    if ( result.error) {
-        res.status(400).send(result.error.details[0].message);
-        returnl;
-    }
+    if ( result.error) return res.status(400).send(result.error.details[0].message);
 
     // create a new object based on input
     const newPlan = {
@@ -75,14 +72,11 @@ app.put('/api/plans/:id', (req, res) => {
 
     // find and get the plan based on the given id (int)
     const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
-    if (!foundPlan) res.status(404).send(`No plan ${planId}`);
+    if (!foundPlan) return res.status(404).send(`No plan ${planId}`);
     
     // validate the input date
     const result = validatePlan(req.body);
-    if ( result.error) {
-        res.status(400).send(result.error.details[0].message);
-        returnl;
-    }
+    if ( result.error) return res.status(400).send(result.error.details[0].message);
 
     //update the plan
     foundPlan.name = req.body.name;
@@ -98,7 +92,7 @@ app.delete('/api/plans/:id', (req, res) => {
 
     // find and get the plan based on the given id (int)
     const foundPlan = allUserPlans.find( p => p.id === parseInt(planId));
-    if (!foundPlan) res.status(404).send(`No plan ${planId}`);
+    if (!foundPlan) return res.status(404).send(`No plan ${planId}`);
 
     //delete the plan
     const index = allUserPlans.indexOf(foundPlan);
