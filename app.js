@@ -1,7 +1,6 @@
 const express = require('express'); // always required
 const bodyParser = require('body-parser');
 const planRouter = require('./routes/plan-router');
-const Joi = require('@hapi/joi');
 
 const app = express(); // standard to have an app object for express
 const PORT = process.env.PORT || 3000;  // use the PORT env var or default to whatever
